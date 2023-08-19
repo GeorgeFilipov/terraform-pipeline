@@ -1,13 +1,9 @@
 terraform {
-    backend "remote" {
-    # The name of your Terraform Cloud organization.
-    organization = "example-organization"
-
-    # The name of the Terraform Cloud workspace to store Terraform state files in.
-    workspaces {
-        name = "example-workspace"
-    }
-    }
+  backend "azurerm" {
+    storage_account_name = "mmdemoterraform"
+    container_name       = "tfstate"
+    key                  = "dev.terraform.tfstate"
+  }
 }
 
 # An example resource that does nothing.
