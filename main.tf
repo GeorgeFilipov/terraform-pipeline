@@ -51,7 +51,7 @@ resource "azurerm_service_plan" "asp" {
 
 resource "azurerm_linux_web_app" "example" {
 
-  name                = "mmweatherdemo"
+  name                = "mmdemo-weather-app"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_service_plan.asp.location
   service_plan_id     = azurerm_service_plan.asp.id
