@@ -21,7 +21,6 @@ provider "azurerm" {
 variable "env" {
   description = "The environment for the deployment"
   type        = string
-  default = "dev"
 }
 
 locals {
