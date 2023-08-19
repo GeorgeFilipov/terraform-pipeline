@@ -65,3 +65,39 @@ resource "azurerm_linux_web_app" "weather_api" {
 
   tags = local.default_tags
 }
+
+resource "random_password" "sqluser" {
+  length  = 16
+  special = false
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "random_password" "sqlpassword" {
+  length           = 16
+  special          = true
+  override_special = "_%@"
+  lifecycle {
+    ignore_changes = all
+  }
+}
+
+resource "azurerm_mssql_server" "sql_srv" {
+  name                         = "${local.prefix}-srv"
+  resource_group_name          = azurerm_resource_group.rg.name
+  location                     = azurerm_resource_group.rg.location
+  administrator_login          = random_password.sqluser.result
+  administrator_login_password = random_password.sqlpassword.result
+}
+
+resource "azurerm_mssql_database" "sql-db" {
+  name           = "${local.prefix}-db"
+  server_id      = azurerm_mssql_server.sql_srv.id
+  collation      = "SQL_Latin1_General_CP1_CI_AS"
+  license_type   = "LicenseIncluded"
+  sku_name       = "Basic"
+  zone_redundant = false
+
+  tags = local.default_tags
+}
