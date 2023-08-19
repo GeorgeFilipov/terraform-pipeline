@@ -35,7 +35,7 @@ locals {
 
 # An example resource that does nothing.
 resource "azurerm_resource_group" "rg" {
-  location = "eu-west"
+  location = "westeurope"
   name     = "${local.prefix}-rg"
   tags     = local.default_tags
 }
