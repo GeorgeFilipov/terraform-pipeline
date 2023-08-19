@@ -50,13 +50,19 @@ resource "azurerm_service_plan" "asp" {
 }
 
 resource "azurerm_linux_web_app" "example" {
+
   name                = "mmweatherdemo"
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_service_plan.asp.location
   service_plan_id     = azurerm_service_plan.asp.id
-  always_on           = false
+
   app_settings = {
     ASPNETCORE_ENVIRONMENT = var.env == "dev" ? "Development" : "Productions"
   }
-  site_config {}
+
+  site_config {
+    always_on = false
+  }
+
+  tags = local.default_tags
 }
