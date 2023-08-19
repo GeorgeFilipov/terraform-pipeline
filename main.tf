@@ -18,9 +18,44 @@ provider "azurerm" {
   features {}  
 }
 
+variable "env" {
+  description = "The environment for the deployment"
+  type        = string
+  default = "dev"
+}
+
+locals {
+  prefix               = "mmdemo-${var.env}"
+  default_tags = {
+    created-by  = "terraform"
+    managed-by  = "terraform"
+    environment = var.env
+  }
+}
+
 # An example resource that does nothing.
-resource "null_resource" "example" {
-    triggers = {
-    value = "A example resource that does nothing!"
-    }
+resource "azurerm_resource_group" "rg" {
+  location = local.region_primary
+  name     = "${local.prefix}-rg"
+  tags     = local.default_tags
+}
+
+resource "azurerm_service_plan" "asp" {
+  name                = "${local.prefix}-asp"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_resource_group.rg.location
+  os_type             = "Linux"
+  sku_name            = "F1"
+  tags = local.default_tags
+}
+
+resource "azurerm_linux_web_app" "example" {
+  name                = "mmweatherdemo"
+  resource_group_name = azurerm_resource_group.rg.name
+  location            = azurerm_service_plan.asp.location
+  service_plan_id     = azurerm_service_plan.asp.id
+  app_settings = {
+    ASPNETCORE_ENVIRONMENT = var.env == "dev" ? "Development" : "Productions"
+  }
+  site_config {}
 }
