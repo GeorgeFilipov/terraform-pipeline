@@ -10,6 +10,10 @@ inputs:
     required: true
   AZURE_TENANT_ID:
     required: true
+  version: 
+    required: true
+  namespace:
+    required: true
 
 env:
     ARM_CLIENT_ID: ${{ inputs.AZURE_CLIENT_ID }}
