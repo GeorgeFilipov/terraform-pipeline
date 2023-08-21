@@ -53,10 +53,11 @@ resource "azurerm_linux_web_app" "weather_api" {
   resource_group_name = azurerm_resource_group.rg.name
   location            = azurerm_service_plan.asp.location
   service_plan_id     = azurerm_service_plan.asp.id
+  application_stack = {
+    dotnet_version = "7.0"
+  }
   app_settings = {
     ASPNETCORE_ENVIRONMENT = var.env == "dev" ? "Development" : "Productions"
-    dotnet_framework_version = "v7.0"
-    linux_fx_version         = "DOTNETCORE|7.0"
   }
 
   site_config {
